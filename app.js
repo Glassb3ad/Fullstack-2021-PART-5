@@ -3,6 +3,8 @@ const app = express()
 const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
+const getTokenFrom = require('./utils/middleware.js')
 const mongoose = require('mongoose')
 
 const mongoUrl =  process.env.NODE_ENV === 'test'
@@ -19,7 +21,8 @@ mongoose.connect(mongoUrl)
 
 app.use(cors())
 app.use(express.json())
+app.use(getTokenFrom)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', userRouter)
-
+app.use('/api/login', loginRouter)
 module.exports = app

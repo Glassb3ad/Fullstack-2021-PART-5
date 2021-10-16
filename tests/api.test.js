@@ -14,7 +14,7 @@ beforeEach(async () => {
     await User.deleteMany({})
     await User.insertMany(testHelper.initialUsers)
 })
-/*describe('Testin api/blogs functionality', ()=>{
+describe('Testin api/blogs functionality', ()=>{
 test('Amount of blogs is six', async () => {
     const response = await api.get("/api/blogs")
     expect(response.body.length).toBe(6)
@@ -67,7 +67,7 @@ test('When trying to add blog missing both title and url, http code 400 is retur
       .send(newBlog)
       .expect(400)
 })
-})*/
+})
 
 describe('testing funtcionality of users router', ()=>{
     test('When trying to add too short username, response is 418 and nothing is added to database', async()=>{
