@@ -4,12 +4,14 @@ const cors = require('cors')
 const blogsRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
-const getTokenFrom = require('./utils/middleware.js')
+const getTokenFrom = require('./utils/middleware.js')[0]
+const getUserFrom = require('./utils/middleware.js')[1]
 const mongoose = require('mongoose')
+const config = require('./utils/config')
 
 const mongoUrl =  process.env.NODE_ENV === 'test'
-?'mongodb+srv://jhalah:Fullstack@cluster0.z1fly.mongodb.net/blogilista-testi?retryWrites=true&w=majority'
-:'mongodb+srv://jhalah:Fullstack@cluster0.z1fly.mongodb.net/blogilista?retryWrites=true&w=majority'
+? config.MONGODBTEST_URI
+: config.MONGODB_URI
 
 mongoose.connect(mongoUrl)
     .then((_result) => {
@@ -22,7 +24,7 @@ mongoose.connect(mongoUrl)
 app.use(cors())
 app.use(express.json())
 app.use(getTokenFrom)
-app.use('/api/blogs', blogsRouter)
+app.use('/api/blogs', getUserFrom, blogsRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 module.exports = app

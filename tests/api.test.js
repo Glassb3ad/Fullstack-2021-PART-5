@@ -5,14 +5,24 @@ const Blog = require('../models/Blog')
 const testHelper = require('./testHelper.js')
 const app = require('../app')
 const User = require('../models/User')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
+let token = ''
 
 beforeEach(async () => {
     await Blog.deleteMany({})
     await Blog.insertMany(testHelper.initialBlogs)
     await User.deleteMany({})
     await User.insertMany(testHelper.initialUsers)
+    /*await api.post('/api/login')
+            .send({
+                username: 'xp3000',
+                password: '12345'
+            })
+            .end((error, response) =>{
+                token = response.body.token
+            })*/
 })
 describe('Testin api/blogs functionality', ()=>{
 test('Amount of blogs is six', async () => {
@@ -38,6 +48,7 @@ test('A new blog is added', async () => {
     }
     await api.post('/api/blogs/')
         .send(newBlog)
+        //.set('Authorization', token)
         .expect(201)
     const blogsAfterPost = await (await api.get('/api/blogs')).body
     expect(blogsAfterPost.length).toBe(7)
@@ -51,6 +62,7 @@ test('When a new blog with undefined likes is added, then its likes has value 0'
     }
     await api.post('/api/blogs/')
         .send(newBlog)
+        //.set({Authorization: token })
         .expect(201)
     const blogsAfterPost = await (await api.get('/api/blogs')).body
     const addedBlog = blogsAfterPost.find(a => a.title === "Pilates Problem II")
@@ -65,6 +77,7 @@ test('When trying to add blog missing both title and url, http code 400 is retur
     }
     await api.post('/api/blogs')
       .send(newBlog)
+      //.set({Authorization: token })
       .expect(400)
 })
 })
