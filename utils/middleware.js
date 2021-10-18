@@ -17,9 +17,11 @@ const getTokenFrom = (request,response, next) => {
 const getUserFrom = async (request,response, next) => {
     const token = request.token
     if(token){
-    const decodedToken = jwt.verify(token, config.SECRET)
+    try{const decodedToken = jwt.verify(token, config.SECRET)
     if (token && decodedToken.id){
     request.user = await User.findById(decodedToken.id)}}
+    catch(error){}
+    }
     next()
 }
 
