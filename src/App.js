@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import './index.css'
 import PropTypes from 'prop-types'
+
 const Login = (props) => {
   const username = props.username
   const password = props.password
@@ -15,13 +16,13 @@ const Login = (props) => {
         <form onSubmit = {props.handleLogin}>
           <div>
             username
-            <input type="text" value = {username} name="Username" onChange={({ target }) => props.setUsername(target.value)} />
+            <input id = "username" type="text" value = {username} name="Username" onChange={({ target }) => props.setUsername(target.value)} />
           </div>
           <div>
             password
-            <input type="password" value = {password} name="Password" onChange={({ target }) => props.setPassword(target.value)} />
+            <input id='password' type="password" value = {password} name="Password" onChange={({ target }) => props.setPassword(target.value)} />
           </div>
-          <button type="submit">login</button>
+          <button type="submit" id = "login-button">login</button>
         </form>
       </div>
     )
@@ -37,16 +38,16 @@ const Login = (props) => {
   else return userLogged()
 }
 
-const CreateNewBlog = (props) => {
-  if(props.user !== null){
+const CreateNewBlog = ( { user, title, author, url, setTitle, setAuthor, setUrl, handlePost }) => {
+  if(user !== null){
     return(
       <div>
         <h2>Create new</h2>
-        <form onSubmit = {props.handlePost}>
-          <div>title:<input type = 'text' value = {props.title} name = 'title' onChange = {({ target }) => props.setTitle(target.value)} /></div>
-          <div>author: <input type = 'text' value = {props.author} name = 'author' onChange = {({ target }) => props.setAuthor(target.value)}/></div>
-          <div>url: <input type = 'text' value = {props.url} name = 'url' onChange = {({ target }) => props.setUrl(target.value)}/></div>
-          <button type="submit">create</button>
+        <form onSubmit = {handlePost} id = "form">
+          <div>title:<input id='title' type = 'text' value = {title} name = 'title' onChange = {({ target }) => setTitle(target.value)} /></div>
+          <div>author: <input id='author' type = 'text' value = {author} name = 'author' onChange = {({ target }) => setAuthor(target.value)}/></div>
+          <div>url: <input id='url' type = 'text' value = {url} name = 'url' onChange = {({ target }) => setUrl(target.value)}/></div>
+          <button type="submit" id="button">create</button>
         </form>
       </div>
     )}
@@ -71,7 +72,7 @@ const Togglable = React.forwardRef((props, ref) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <button id = 'toggle' onClick={toggleVisibility}>{props.buttonLabel}</button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
@@ -106,12 +107,12 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
   const [notiMessage, setNotiMessage] = useState(null)
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
   const blogFormRef = useRef()
 
   const handleLogin = async (event) => {
@@ -178,10 +179,10 @@ const App = () => {
         <Blog key={blog.id} blog={blog} setBlogs = {setBlogs} user = {user}/>
       )}
       <Togglable buttonLabel = "create new blog" ref={blogFormRef}>
-        <CreateNewBlog user = {user} title = {title} url = {url} author = {author} setAuthor = {setAuthor} setTitle = {setTitle} setUrl = {setUrl} handlePost = {handlePost}/>
+        <CreateNewBlog user = {user}   title = {title} setTitle = {setTitle}  author = {author} setAuthor = {setAuthor}  url ={url} setUrl = {setUrl} handlePost = {handlePost}/>
       </Togglable>
     </div>
   )
 }
 
-export default App
+export default { App, CreateNewBlog }
