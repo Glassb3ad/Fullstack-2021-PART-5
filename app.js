@@ -27,4 +27,8 @@ app.use(getTokenFrom)
 app.use('/api/blogs', getUserFrom, blogsRouter)
 app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
+if (process.env.NODE_ENV === 'test') {
+    const testingRouter = require('./controllers/reset.js')
+    app.use('/api/testing', testingRouter)
+  }
 module.exports = app
